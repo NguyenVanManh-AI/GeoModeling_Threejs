@@ -1,37 +1,45 @@
-import * as THREE from 'three'; // Import toàn bộ module 'three' vào biến THREE.
+import * as THREE from 'three';
 
-const scene = new THREE.Scene(); // Khởi tạo một scene (cảnh).
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // Khởi tạo camera với góc nhìn, tỷ lệ khung hình, và khoảng cách hiển thị.
+// Khởi tạo scene, camera và renderer cho cube
+const sceneCube = new THREE.Scene();
+const cameraCube = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const rendererCube = new THREE.WebGLRenderer();
+rendererCube.setSize(window.innerWidth / 2, window.innerHeight);
+document.getElementById("cube").appendChild(rendererCube.domElement);
 
-const renderer = new THREE.WebGLRenderer(); // Khởi tạo một renderer để vẽ đối tượng vào canvas.
-renderer.setSize(window.innerWidth, window.innerHeight); // Thiết lập kích thước của renderer bằng kích thước của cửa sổ trình duyệt.
-document.body.appendChild(renderer.domElement); // Thêm canvas của renderer vào body của trang web.
+// Khởi tạo scene, camera và renderer cho cylinder
+const sceneCylinder = new THREE.Scene();
+const cameraCylinder = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const rendererCylinder = new THREE.WebGLRenderer();
+rendererCylinder.setSize(window.innerWidth / 2, window.innerHeight);
+document.getElementById("cylinder").appendChild(rendererCylinder.domElement);
 
 // cube
-const geometry = new THREE.BoxGeometry(1, 1, 1); // Tạo hình hộp (cube) với kích thước 1x1x1.
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Tạo vật liệu cơ bản với màu xanh lá cây.
-const cube = new THREE.Mesh(geometry, material); // Tạo mesh (đối tượng 3D) từ hình hộp và vật liệu.
-scene.add(cube); // Thêm mesh vào scene.
+const geometryCube = new THREE.BoxGeometry(1, 1, 1);
+const materialCube = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const cube = new THREE.Mesh(geometryCube, materialCube);
+sceneCube.add(cube);
 
-// sphere
-const geometry2 = new THREE.SphereGeometry(0.5, 32, 32); // Tạo một hình cầu với bán kính 0.5 và độ phân giải 32x32.
-const material2 = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-const sphere = new THREE.Mesh(geometry2, material2);
-scene.add(sphere);
+// cylinder
+const geometryCylinder = new THREE.CylinderGeometry(0.5, 0.5, 1, 32); // Tạo một hình trụ với bán kính đáy là 0.5, bán kính trên là 0.5, chiều cao là 1 và độ phân giải là 32.
+const materialCylinder = new THREE.MeshBasicMaterial({ color: 0xff00ff }); // Màu hồng
+const cylinder = new THREE.Mesh(geometryCylinder, materialCylinder);
+sceneCylinder.add(cylinder);
 
+cameraCube.position.z = 5;
+cameraCylinder.position.z = 5;
 
-camera.position.z = 5; // Đặt vị trí của camera.
+function animate() {
+	requestAnimationFrame(animate);
 
-function animate() { // Khai báo hàm animate.
-	requestAnimationFrame(animate); // Yêu cầu trình duyệt gọi hàm animate trước khi vẽ một frame tiếp theo.
+	cube.rotation.x += 0.01;
+	cube.rotation.y += 0.01;
 
-	cube.rotation.x += 0.01; // Quay cube theo trục x.
-	cube.rotation.y += 0.01; // Quay cube theo trục y.
-
-	sphere.rotation.x += 0.01; // Quay hình cầu cũng giống như hình hộp.
-	sphere.rotation.y += 0.01;
+	cylinder.rotation.x += 0.01;
+	cylinder.rotation.y += 0.01;
 	
-	renderer.render(scene, camera); // Vẽ scene.
+	rendererCube.render(sceneCube, cameraCube); // Render cho cube
+	rendererCylinder.render(sceneCylinder, cameraCylinder); // Render cho cylinder
 }
 
-animate(); // Gọi hàm animate để bắt đầu vòng lặp vẽ frame.
+animate();
